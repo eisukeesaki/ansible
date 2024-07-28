@@ -1,39 +1,35 @@
-- hosts: localhost
-  become: true
-  vars:
-    ansible_user: rei
-  tasks:
-  - name: Install zsh
-    pacman:
-      name: zsh
-      state: present
+tasks:
+- name: Install zsh
+  pacman:
+    name: zsh
+    state: present
 
-  - name: Change shell to zsh
-    user:
-      name: "{{ ansible_user }}"
-      shell: /bin/zsh
+- name: Change shell to zsh
+  user:
+    name: "{{ ansible_user }}"
+    shell: /bin/zsh
 
-  - name: Oh-My-Zsh
-    shell: curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh > /home/{{ ansible_user }}/.oh-my-installer && chmod +x /home/{{ ansible_user }}/.oh-my-installer && /home/{{ ansible_user }}/.oh-my-installer
-    become_user: "{{ ansible_user }}"
+- name: Oh-My-Zsh
+  shell: curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh > /home/{{ ansible_user }}/.oh-my-installer && chmod +x /home/{{ ansible_user }}/.oh-my-installer && /home/{{ ansible_user }}/.oh-my-installer
+  become_user: "{{ ansible_user }}"
 
-  - name: Clone zsh-autosuggestions repository
-    git:
-      repo: 'https://github.com/zsh-users/zsh-autosuggestions.git'
-      dest: /home/{{ ansible_user }}/.oh-my-zsh/custom/plugins/zsh-autosuggestions
-    become_user: "{{ ansible_user }}"
+- name: Clone zsh-autosuggestions repository
+  git:
+    repo: 'https://github.com/zsh-users/zsh-autosuggestions.git'
+    dest: /home/{{ ansible_user }}/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+  become_user: "{{ ansible_user }}"
 
-  - name: Add zsh-autosuggestions to plugins list
-    lineinfile:
-      path: /home/{{ ansible_user }}/.zshrc
-      regexp: '^plugins='
-      line: 'plugins=(zsh-autosuggestions)'
-      create: yes
-    become_user: "{{ ansible_user }}"
-    notify: source_zshrc
+- name: Add zsh-autosuggestions to plugins list
+  lineinfile:
+    path: /home/{{ ansible_user }}/.zshrc
+    regexp: '^plugins='
+    line: 'plugins=(zsh-autosuggestions)'
+    create: yes
+  become_user: "{{ ansible_user }}"
+  notify: source_zshrc
 
-  handlers:
-  - name: source_zshrc
-    shell: zsh -c 'source /home/{{ ansible_user }}/.zshrc'
-    become_user: "{{ ansible_user }}"
+handlers:
+- name: source_zshrc
+  shell: zsh -c 'source /home/{{ ansible_user }}/.zshrc'
+  become_user: "{{ ansible_user }}"
 

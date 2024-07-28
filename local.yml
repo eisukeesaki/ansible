@@ -1,0 +1,7 @@
+- hosts: localhost
+  become: true
+  vars:
+    ansible_user: rei
+  tasks:
+    - include: tasks/zsh-setup.yml
+
